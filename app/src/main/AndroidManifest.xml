@@ -51,6 +51,19 @@
         </activity>
 
         <activity
+            android:name="com.openingl.vr.controller.SimpleControllerActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="com.immersion.opengl.vr" />
+
+                <category android:name="com.google.intent.category.CARDBOARD" />
+                <category android:name="com.google.intent.category.DAYDREAM" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name="com.openingl.vr.triangle.SingleTriangleActivity"
             android:hardwareAccelerated="true"
             android:screenOrientation="landscape" />
