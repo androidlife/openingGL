@@ -30,6 +30,7 @@ proguard/
 .navigation/
 
 gallery/
+.DS_Store
 
 # Android Studio captures folder
 captures/
