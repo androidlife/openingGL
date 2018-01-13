@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.openinggl">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name="com.openingl.MainApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name="com.openingl.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.openingl.triangle.single.TriangleActivity" />
+        <activity android:name="com.openingl.triangle.two.TriangleDoubleActivity" />
+        <activity android:name="com.openingl.rectangle.RectangleActivity" />
+        <activity android:name="com.openingl.circle.simple.CircleActivity" />
+        <activity android:name="com.openingl.circle.color.CircleColorActivity" />
+        <activity android:name="com.openingl.circle.formula.CircleFormulaActivity" />
+        <activity android:name="com.openingl.triangle.fan.TriangleFanActivity" />
+        <activity
+            android:name="com.openingl.triangle.fanagain.TriangleFanActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name="com.openingl.vr.cube.CubeActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape" />
+
+
+        <activity
+            android:name="com.openingl.vr.rectangle.SimpleRectangleActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="com.immersion.opengl.vr" />
+
+                <category android:name="com.google.intent.category.CARDBOARD" />
+                <category android:name="com.google.intent.category.DAYDREAM" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.openingl.vr.triangle.SingleTriangleActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name="com.openingl.vr.rectangle.VrRectangleMoveActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="com.immersion.opengl.vr" />
+
+                <category android:name="com.google.intent.category.CARDBOARD" />
+                <category android:name="com.google.intent.category.DAYDREAM" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.openingl.vr.rectangle.ControllerActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="com.immersion.opengl.vr" />
+
+                <category android:name="com.google.intent.category.CARDBOARD" />
+                <category android:name="com.google.intent.category.DAYDREAM" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.openingl.vr.triangle.TriangleMoveActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name="com.openingl.vr.cube.CubeMoreActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name="com.openingl.vr.gallery.VrGalleryActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="landscape" />
+
+        <activity android:name="com.openingl.texture.repeatmode.RepeatTextureActivity" />
+        <activity android:name="com.openingl.cube.CubeActivity" />
+        <activity android:name="com.openingl.circle.perfect.CirclePerfectActivity" />
+        <activity android:name="com.openingl.triangle.pentagon.PentagonActivity" />
+        <activity android:name="com.openingl.table.TableActivity" />
+        <activity android:name="com.openingl.triangle.face.TriangleFaceActivity" />
+        <activity android:name="com.openingl.texture.cube.CubeTextureActivity" />
+        <activity android:name="com.openingl.texture.different.DifferentTextureActivity" />
+        <activity android:name="com.openingl.mulitple.MultipleModelActivity" />
+        <activity android:name="com.openingl.texture.net.NetTextureActivity" />
+        <activity android:name="com.openingl.camera.cube.CubeActivity" />
+
+        <activity android:name="com.openingl.camera.SimpleCameraActivity" />
+        <activity android:name="com.openingl.light.CubeLightActivity" />
+        <activity android:name="com.openingl.triangle.drawelement.DraweElementActivity" />
+        <activity
+            android:name="com.openingl.gallery.GridActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name="com.openingl.gallery.withborder.GridBorderActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name="com.openingl.gallery.main.GalleryActivity"
+            android:screenOrientation="landscape" />
+
+        <activity android:name="com.openingl.camera.perspective.PerspectiveActivity" />
+        <activity android:name="com.openingl.rectangle.border.BorderActivity" />
+        <activity android:name="com.openingl.texture.border.SimpleBorderActivity" />
+    </application>
+
+</manifest>
