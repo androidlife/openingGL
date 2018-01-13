@@ -1,4 +1,4 @@
-package com.openingl.vr.controller;
+package com.openingl.vr.controller.simple2;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -14,6 +14,8 @@ import com.google.vr.sdk.controller.ControllerManager;
 import com.openinggl.R;
 import com.openingl.utils.GLHelper;
 import com.openingl.utils.ProgramCreator;
+import com.openingl.vr.controller.ControllerEventListener;
+import com.openingl.vr.controller.ReticleRect;
 
 import java.nio.FloatBuffer;
 

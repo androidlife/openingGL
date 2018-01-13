@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.openinggl.R;
 import com.openingl.gallery.Utils;
 import com.openingl.utils.GLHelper;
+import com.openingl.vr.controller.SimpleControllerActivity;
 import com.openingl.vr.rectangle.ControllerActivity;
 
 import butterknife.BindView;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToOtherActivity() {
-        startActivity(new Intent(this,ControllerActivity.class));
+        startActivity(new Intent(this,SimpleControllerActivity.class));
         finish();
     }
 

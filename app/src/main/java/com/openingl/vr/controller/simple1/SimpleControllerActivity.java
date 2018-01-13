@@ -1,4 +1,4 @@
-package com.openingl.vr.controller;
+package com.openingl.vr.controller.simple1;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -14,6 +14,8 @@ import com.google.vr.sdk.controller.ControllerManager;
 import com.openinggl.R;
 import com.openingl.utils.GLHelper;
 import com.openingl.utils.ProgramCreator;
+import com.openingl.vr.controller.ControllerEventListener;
+import com.openingl.vr.controller.ReticleRect;
 
 import java.nio.FloatBuffer;
 
@@ -52,10 +54,6 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
             0f, yPos, zPos,
             xPos, 0f, zPos,
             0f, 0f, zPos
-    };
-    float[] corners = {
-            0f, 0f, zPos,
-            xPos,0,zPos,
     };
     float[] colors = {
             1f, 0f, 0f, 1f,
@@ -160,54 +158,24 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
 
     private void initRectModel() {
         float[] centerPoints = {xPos / 2, yPos / 2, zPos, 1};
-        centerPos = new float[4];
+        float[] centerPos = new float[4];
         Matrix.multiplyMV(centerPos, 0, transformationMatrix, 0, centerPoints, 0);
         Matrix.setIdentityM(rectCenterModel, 0);
-        Timber.d("Center Pos = %.2f,%.2f,%.2f", centerPos[0], centerPos[1], centerPos[2]);
+        Timber.d("Center Pos = %.2f,%.2f,%.2f",centerPos[0],centerPos[1],centerPos[2]);
         Matrix.translateM(rectCenterModel, 0, centerPos[0], centerPos[1], centerPos[2]);
-        cornerPoints();
-    }
-
-    private void cornerPoints() {
-        int index = -1;
-        float[] leftTop = new float[4];
-        float[] leftTopOriginal = {corners[++index], corners[++index], corners[++index], 1};
-        Matrix.multiplyMV(leftTop, 0, transformationMatrix, 0, leftTopOriginal, 0);
-        float[] rightBottomOriginal = {corners[++index], corners[++index], corners[++index], 1};
-        float[] rightBottom = new float[4];
-        Matrix.multiplyMV(rightBottom, 0, transformationMatrix, 0, rightBottomOriginal, 0);
-        float left = leftTop[0];
-        float top = leftTop[1];
-        float right = rightBottom[0];
-        float bottom = rightBottom[1];
-        float centerX = (right + left) / 2;
-        float centerY = (top + bottom) / 2;
-        Timber.d("Center Pos1 = %.2f,%.2f,%.2f", centerX, centerY, zPos);
-        Matrix.setIdentityM(rectCenterModel, 0);
-        Matrix.translateM(rectCenterModel, 0, centerX, centerY, zPos);
     }
 
     private void initTransformationMatrix() {
         if (transformationMatrix != null)
             return;
-        float[] orthoMatrix = new float[16];
-        float[] translateMatrix = new float[16];
-
-        Matrix.setIdentityM(translateMatrix, 0);
-        Matrix.translateM(translateMatrix, 0, -1f, 0f, 0f);
-
-        Matrix.setIdentityM(orthoMatrix, 0);
-
         transformationMatrix = new float[16];
         if (xPos > yPos) {
-            GLHelper.orthoM(orthoMatrix, 0, 0, xPos, yPos, 0, 0, 0.5f,
+            GLHelper.orthoM(transformationMatrix, 0, 0, xPos, yPos, 0, 0, 0.5f,
                     xPos / yPos, 1);
         } else {
-            GLHelper.orthoM(orthoMatrix, 0, 0, xPos, yPos, 0, 0, 0.5f,
+            GLHelper.orthoM(transformationMatrix, 0, 0, xPos, yPos, 0, 0, 0.5f,
                     1, yPos / xPos);
         }
-
-        Matrix.multiplyMM(transformationMatrix, 0, translateMatrix, 0, orthoMatrix, 0);
     }
 
     private void enableTriangleData() {

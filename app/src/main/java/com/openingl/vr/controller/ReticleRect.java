@@ -9,6 +9,8 @@ import com.openingl.utils.ProgramCreator;
 
 import java.nio.FloatBuffer;
 
+import timber.log.Timber;
+
 import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glDrawArrays;
@@ -39,6 +41,8 @@ public class ReticleRect {
         float rightEnd = centerX + radius;
         float topEnd = centerY + radius;
         float bottomEnd = centerY - radius;
+        Timber.d("Reticle pos = %.2f,%.2f,%.2f,%.2f",leftEnd,topEnd,rightEnd,bottomEnd);
+        Timber.d("Circle center pos = %.2f,%.2f,",centerX,centerY);
         circlePositions = new float[]{
                 leftEnd, topEnd, zPos,
                 leftEnd, bottomEnd, zPos,
