@@ -53,10 +53,6 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
             xPos, 0f, zPos,
             0f, 0f, zPos
     };
-    float[] corners = {
-            0f, 0f, zPos,
-            xPos,0,zPos,
-    };
     float[] colors = {
             1f, 0f, 0f, 1f,
             1f, 0f, 0f, 1f,
@@ -77,14 +73,14 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
     private ReticleRect staticReticle, movingReticle;
 
 
-    float[] transformationMatrix;
+    float[] modelTransformationMatrix;
     float[] model = new float[16];
     float[] view = new float[16];
     float[] mvp = new float[16];
     //
     float[] controllerMatrix = new float[16];
-    float[] rectCenterModel = new float[16];
-    float[] centerPos = {0, 0, zPos, 1};
+    float[] centerPos = {xPos / 2, yPos / 2, zPos, 1};
+    float[] staticCenterPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +114,7 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         float[] eyeView = eye.getEyeView();
         float[] perspective = eye.getPerspective(0.1f, 200f);
-        model = transformationMatrix;
+        model = modelTransformationMatrix;
         //draw rectangle
         Matrix.multiplyMM(view, 0, perspective, 0, eyeView, 0);
         Matrix.multiplyMM(mvp, 0, view, 0, model, 0);
@@ -141,7 +137,7 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
             controller.update();
             controller.orientation.toRotationMatrix(controllerMatrix);
             movingReticle.drawMoving(perspective, eyeView, controllerMatrix);
-            boolean contains = isLookingAtObject(controllerMatrix, rectCenterModel);
+            boolean contains = isLookingAtObject(controllerMatrix, modelTransformationMatrix);
             float[] color = contains ? new float[]{0.0f, 0.0f, 1.0f, 1.0f} :
                     new float[]{0.0f, 0.0f, 0.0f, 1.0f};
             staticReticle.drawStatic(perspective, eyeView, color);
@@ -154,41 +150,12 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
     public void onSurfaceCreated(EGLConfig eglConfig) {
         enableTriangleData();
         initTransformationMatrix();
-        initRectModel();
         enableCircleData();
     }
 
-    private void initRectModel() {
-        float[] centerPoints = {xPos / 2, yPos / 2, zPos, 1};
-        centerPos = new float[4];
-        Matrix.multiplyMV(centerPos, 0, transformationMatrix, 0, centerPoints, 0);
-        Matrix.setIdentityM(rectCenterModel, 0);
-        Timber.d("Center Pos = %.2f,%.2f,%.2f", centerPos[0], centerPos[1], centerPos[2]);
-        Matrix.translateM(rectCenterModel, 0, centerPos[0], centerPos[1], centerPos[2]);
-        cornerPoints();
-    }
-
-    private void cornerPoints() {
-        int index = -1;
-        float[] leftTop = new float[4];
-        float[] leftTopOriginal = {corners[++index], corners[++index], corners[++index], 1};
-        Matrix.multiplyMV(leftTop, 0, transformationMatrix, 0, leftTopOriginal, 0);
-        float[] rightBottomOriginal = {corners[++index], corners[++index], corners[++index], 1};
-        float[] rightBottom = new float[4];
-        Matrix.multiplyMV(rightBottom, 0, transformationMatrix, 0, rightBottomOriginal, 0);
-        float left = leftTop[0];
-        float top = leftTop[1];
-        float right = rightBottom[0];
-        float bottom = rightBottom[1];
-        float centerX = (right + left) / 2;
-        float centerY = (top + bottom) / 2;
-        Timber.d("Center Pos1 = %.2f,%.2f,%.2f", centerX, centerY, zPos);
-        Matrix.setIdentityM(rectCenterModel, 0);
-        Matrix.translateM(rectCenterModel, 0, centerX, centerY, zPos);
-    }
 
     private void initTransformationMatrix() {
-        if (transformationMatrix != null)
+        if (modelTransformationMatrix != null)
             return;
         float[] orthoMatrix = new float[16];
         float[] translateMatrix = new float[16];
@@ -198,7 +165,7 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
 
         Matrix.setIdentityM(orthoMatrix, 0);
 
-        transformationMatrix = new float[16];
+        modelTransformationMatrix = new float[16];
         if (xPos > yPos) {
             GLHelper.orthoM(orthoMatrix, 0, 0, xPos, yPos, 0, 0, 0.5f,
                     xPos / yPos, 1);
@@ -207,7 +174,7 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
                     1, yPos / xPos);
         }
 
-        Matrix.multiplyMM(transformationMatrix, 0, translateMatrix, 0, orthoMatrix, 0);
+        Matrix.multiplyMM(modelTransformationMatrix, 0, translateMatrix, 0, orthoMatrix, 0);
     }
 
     private void enableTriangleData() {
@@ -220,15 +187,21 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
     }
 
     private void enableCircleData() {
+
+        staticCenterPos = new float[4];
+        Matrix.multiplyMV(staticCenterPos, 0, modelTransformationMatrix, 0, centerPos, 0);
+        Timber.d("Center Pos = %.2f,%.2f,%.2f", staticCenterPos[0], staticCenterPos[1],
+                staticCenterPos[2]);
+
         float zPoss = zPos + 0.05f;
-        staticReticle = new ReticleRect(this, zPoss);
+        staticReticle = new ReticleRect(this, staticCenterPos[0], staticCenterPos[1], 0.04f,
+                zPoss);
         staticReticle.setUp();
-        movingReticle = new ReticleRect(this, centerPos[0], centerPos[1], 0.04f, zPoss);
+        movingReticle = new ReticleRect(this, zPoss);
         movingReticle.setUp();
     }
 
 
-    private static final float[] POS_MATRIX_MULTIPLY_VEC = {0, 0, 0, 1.0f};
     private float[] tempPosition = new float[4];
 
 
@@ -237,12 +210,13 @@ public class SimpleControllerActivity extends GvrActivity implements GvrView.Ste
 
     private float[] modelView = new float[16];
 
-    //private static final float YAW_LIMIT = 0.15f;
-    //private static final float PITCH_LIMIT = 0.15f;
+//    private static final float YAW_LIMIT = 0.15f;
+//    private static final float PITCH_LIMIT = 0.15f;
+
     private boolean isLookingAtObject(float[] headView, float[] modelCube) {
         // Convert object space to camera space. Use the headView from onNewFrame.
         Matrix.multiplyMM(modelView, 0, headView, 0, modelCube, 0);
-        Matrix.multiplyMV(tempPosition, 0, modelView, 0, POS_MATRIX_MULTIPLY_VEC, 0);
+        Matrix.multiplyMV(tempPosition, 0, modelView, 0, centerPos, 0);
 
         float pitch = (float) Math.atan2(tempPosition[1], -tempPosition[2]);
         float yaw = (float) Math.atan2(tempPosition[0], -tempPosition[2]);
